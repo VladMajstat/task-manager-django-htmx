@@ -1,35 +1,53 @@
-<div class="app-task-row d-flex align-items-start gap-2 px-2 py-2 border-top {% if highlighted %}app-task-highlight{% endif %}"
-     data-task-id="{{ task_id }}">
+﻿<div class="app-task-row d-flex align-items-start gap-2 px-2 py-2 border-top"
+     data-task-id="{{ task.id }}">
 
   <div class="pt-1">
-    <input class="form-check-input" type="checkbox" {% if checked %}checked{% endif %}
-      hx-post="#"
+    <input class="form-check-input" type="checkbox" {% if task.is_done %}checked{% endif %}
+      hx-post="{% url 'service:task_toggle_done' task.id %}"
       hx-target="closest .app-task-row"
       hx-swap="outerHTML"
     />
   </div>
 
   <div class="flex-grow-1">
-    <div class="app-task-text {% if checked %}app-task-done{% endif %}">
-      {{ text }}
+    <div class="app-task-text {% if task.is_done %}app-task-done{% endif %}">
+      {{ task.name }}
     </div>
 
-    <!-- Заглушка під deadline/priority -->
-    <div class="small text-muted mt-1 d-none">
-      <span class="me-2">Priority: <strong>2</strong></span>
-      <span>Deadline: <strong>2026-02-10</strong></span>
-    </div>
+    {% if task.priority or task.deadline %}
+      <div class="small text-muted mt-1">
+        {% if task.priority %}
+          <span class="me-2">Priority: <strong>{{ task.priority }}</strong></span>
+        {% endif %}
+        {% if task.deadline %}
+          <span>Deadline: <strong>{{ task.deadline }}</strong></span>
+        {% endif %}
+      </div>
+    {% endif %}
   </div>
 
-  <!-- Task actions (stubs) -->
+  <!-- Task actions -->
   <div class="d-flex align-items-center gap-1">
-    <button class="btn btn-sm btn-link text-muted app-icon-btn" title="Move (stub)" type="button">↕️</button>
-    <button class="btn btn-sm btn-link text-muted app-icon-btn" title="Edit (stub)" type="button">✏️</button>
-    <button class="btn btn-sm btn-link text-muted app-icon-btn" title="Delete (stub)" type="button"
-      hx-post="#"
+    <button
+      class="btn btn-sm btn-link text-muted app-icon-btn"
+      title="Edit"
+      type="button"
+      hx-get="{% url 'service:task_update' task.id %}"
+      hx-target="closest .app-task-row"
+      hx-swap="outerHTML"
+    >
+      Edit
+    </button>
+    <button
+      class="btn btn-sm btn-link text-muted app-icon-btn"
+      title="Delete"
+      type="button"
+      hx-post="{% url 'service:task_delete' task.id %}"
       hx-target="closest .app-task-row"
       hx-swap="delete"
       hx-confirm="Delete this task?"
-    >🗑️</button>
+    >
+      Delete
+    </button>
   </div>
 </div>
