@@ -1,0 +1,19 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Sign out{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-card-body">
+      <h1 class="auth-title">Sign out</h1>
+      <p class="auth-subtitle">Are you sure you want to sign out?</p>
+      <form class="auth-form" method="post" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        {{ redirect_field }}
+        <button class="auth-btn auth-btn-danger" type="submit">Sign out</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
