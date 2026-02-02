@@ -1,0 +1,17 @@
+﻿[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = ["migrations", "__pycache__", ".venv", ".git"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+per-file-ignores = {
+  "main/models.py" = ["F401"],
+  "users/views.py" = ["F401"],
+  "main/tests.py" = ["F401"],
+  "service/tests.py" = ["F401"],
+  "users/tests.py" = ["F401"],
+  "users/admin.py" = ["F401"],
+  "service/admin.py" = ["F401"],
+  "main/admin.py" = ["F401"],
+}
