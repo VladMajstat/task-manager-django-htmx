@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block title %}Dashboard{% endblock %}
 
@@ -10,35 +10,32 @@
 
     <!-- Projects grid -->
     <div class="row g-4" id="projects-grid">
-
-      <!-- PROJECT CARD (stub #1) -->
-      {% include "partials/project_card.html" with
-          project_id="1"
-          project_title="For technical"
-          tasks_stub=True
-      %}
-
-      <!-- PROJECT CARD (stub #2) -->
-      {% include "partials/project_card.html" with
-          project_id="2"
-          project_title="For Home"
-          tasks_stub=True
-      %}
-
-      <!-- Заглушка: сюди HTMX буде додавати нові проєкти -->
+      {% for project in projects %}
+        {% include "partials/project_card.html" with project=project task_form=task_form %}
+      {% empty %}
+        <div class="col-12">
+          <div class="alert alert-light border shadow-sm">
+            No projects yet. Create your first list below.
+          </div>
+        </div>
+      {% endfor %}
     </div>
 
     <!-- Add TODO List button (bottom) -->
     <div class="d-flex justify-content-center mt-4">
-      <button
-        class="btn btn-primary btn-lg app-add-list-btn"
-        hx-post="#"
+      <form
+        class="d-flex flex-column flex-sm-row gap-2 align-items-stretch align-items-sm-center"
+        hx-post="{% url 'service:project_create' %}"
         hx-target="#projects-grid"
         hx-swap="beforeend"
         hx-disabled-elt="this"
       >
-        <span class="me-2">➕</span> Add TODO List
-      </button>
+        {% csrf_token %}
+        {{ project_form.name }}
+        <button class="btn btn-primary btn-lg app-add-list-btn" type="submit">
+          + Add TODO List
+        </button>
+      </form>
     </div>
 
   </div>

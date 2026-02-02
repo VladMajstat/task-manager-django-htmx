@@ -1,80 +1,66 @@
-<div class="col-12 col-lg-6">
-  <section class="card app-card shadow-sm" data-project-id="{{ project_id }}">
+﻿<div class="col-12 col-lg-6">
+  <section class="card app-card shadow-sm" data-project-id="{{ project.id }}">
 
     <!-- Card header -->
     <div class="app-card-header d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center gap-2">
-        <span class="app-icon" aria-hidden="true">🗓️</span>
-        <h2 class="h6 m-0 text-white">{{ project_title }}</h2>
+        <span class="app-icon" aria-hidden="true">LIST</span>
+        <h2 class="h6 m-0 text-white">{{ project.name }}</h2>
       </div>
 
       <div class="d-flex align-items-center gap-2">
-        <!-- Edit/Delete icons as stubs -->
-        <button class="btn btn-sm btn-link text-white-50 app-icon-btn" title="Edit (stub)" type="button">
-          ✏️
+        <button
+          class="btn btn-sm btn-link text-white-50 app-icon-btn"
+          title="Edit"
+          type="button"
+          hx-get="{% url 'service:project_update' project.id %}"
+          hx-target="closest .app-card"
+          hx-swap="outerHTML"
+        >
+          Edit
         </button>
-        <button class="btn btn-sm btn-link text-white-50 app-icon-btn" title="Delete (stub)" type="button">
-          🗑️
+        <button
+          class="btn btn-sm btn-link text-white-50 app-icon-btn"
+          title="Delete"
+          type="button"
+          hx-post="{% url 'service:project_delete' project.id %}"
+          hx-target="closest .col-12"
+          hx-swap="delete"
+          hx-confirm="Delete this project?"
+        >
+          Delete
         </button>
       </div>
     </div>
 
     <!-- Add task row -->
     <div class="app-add-task-row p-2 border-bottom">
-      <div class="input-group">
-        <span class="input-group-text app-plus" title="Add">＋</span>
-
-        <input
-          class="form-control app-task-input"
-          type="text"
-          name="name"
-          placeholder="Start typing here to create a task..."
-          autocomplete="off"
-        />
-
+      <form
+        class="input-group"
+        hx-post="{% url 'service:task_create' project.id %}"
+        hx-target="#project-{{ project.id }}-tasks"
+        hx-swap="afterbegin"
+        hx-disabled-elt="this"
+      >
+        {% csrf_token %}
+        <span class="input-group-text app-plus" title="Add">+</span>
+        {{ task_form.name }}
         <button
           class="btn btn-success app-add-task-btn"
-          type="button"
-          hx-post="#"
-          hx-include="closest .app-add-task-row"
-          hx-target="#project-{{ project_id }}-tasks"
-          hx-swap="afterbegin"
-          _="on click
-                set input to the first <input/> in the closest <section/>
-                if input.value.trim() is '' then halt
-                set input.value to ''
-                focus() on input
-             end"
+          type="submit"
         >
           Add Task
         </button>
-      </div>
-
-      <!-- Тут можна додати міні поля (priority/deadline) пізніше, як на 2-му етапі -->
-      <!--
-      <div class="d-flex gap-2 mt-2">
-        <input type="date" class="form-control form-control-sm" name="deadline" />
-        <select class="form-select form-select-sm" name="priority">
-          <option value="1">High</option>
-          <option value="2">Medium</option>
-          <option value="3">Low</option>
-        </select>
-      </div>
-      -->
+      </form>
     </div>
 
     <!-- Tasks list -->
-    <div class="app-tasks" id="project-{{ project_id }}-tasks">
-
-      {% if tasks_stub %}
-        {% include "partials/task_row.html" with task_id="t1" text="Open this mock-up in Adobe Fireworks" checked=False %}
-        {% include "partials/task_row.html" with task_id="t2" text="Attentively check the file" checked=False highlighted=True %}
-        {% include "partials/task_row.html" with task_id="t3" text="Write HTML & CSS" checked=False %}
-        {% include "partials/task_row.html" with task_id="t4" text="Add Javascript to implement adding / editing / removing for todo items and lists taking into account as more use cases as possible" checked=False %}
-      {% else %}
-        <!-- Тут Django буде рендерити реальні таски -->
-      {% endif %}
-
+    <div class="app-tasks" id="project-{{ project.id }}-tasks">
+      {% for task in project.tasks.all %}
+        {% include "partials/task_row.html" with task=task %}
+      {% empty %}
+        <div class="px-3 py-3 text-muted small">No tasks yet.</div>
+      {% endfor %}
     </div>
 
   </section>
