@@ -1,6 +1,6 @@
-{% load static %}
+﻿{% load static %}
 <!doctype html>
-<html lang="uk">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,21 +26,24 @@
   </head>
 
   <body class="app-bg">
-    <!-- Top bar -->
     <header class="app-topbar">
       <div class="container py-2 d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-2">
-          <span class="app-icon" aria-hidden="true">🗓️</span>
+          <span class="app-icon" aria-hidden="true">LIST</span>
           <strong class="text-white">Task manager</strong>
         </div>
 
         <div class="d-flex align-items-center gap-3">
-          <!-- Заглушка під user menu -->
-          <span class="text-white-50 small d-none d-md-inline">
-            {{ request.user.username|default:"guest" }}
-          </span>
-          <a class="btn btn-sm btn-outline-light" href="#" title="Profile (stub)">Profile</a>
-          <a class="btn btn-sm btn-light" href="#" title="Logout (stub)">Logout</a>
+          {% if request.user.is_authenticated %}
+            <span class="text-white-50 small d-none d-md-inline">
+              {{ request.user.username }}
+            </span>
+            {% comment %} <a class="btn btn-sm btn-outline-light" href="#">Profile</a> {% endcomment %}
+            <a class="btn btn-sm btn-light" href="{% url 'account_logout' %}">Logout</a>
+          {% else %}
+            <a class="btn btn-sm btn-outline-light" href="{% url 'account_login' %}">Sign in</a>
+            <a class="btn btn-sm btn-light" href="{% url 'account_signup' %}">Sign up</a>
+          {% endif %}
         </div>
       </div>
     </header>
@@ -51,7 +54,7 @@
 
     <footer class="container pb-4">
       <div class="text-center text-white-50 small">
-        © {{ now|date:"Y" }} Task manager — mock UI
+        © {{ now|date:"Y" }} Task manager
       </div>
     </footer>
 
