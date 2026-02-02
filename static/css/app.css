@@ -1,0 +1,88 @@
+/* Background similar to screenshot (warm gradient) */
+.app-bg {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #3c78c8 0%, #d7a022 70%, #d79a1d 100%);
+}
+
+/* Top bar */
+.app-topbar {
+  background: linear-gradient(180deg, #2e69b3 0%, #1f5fa8 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+/* Card */
+.app-card {
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.app-card-header {
+  padding: 10px 12px;
+  background: linear-gradient(180deg, #2f77c6 0%, #1f61ab 100%);
+}
+
+.app-icon {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.18);
+  border-radius: 6px;
+}
+
+.app-icon-btn {
+  text-decoration: none !important;
+  padding: 2px 6px !important;
+  border-radius: 6px;
+}
+
+.app-icon-btn:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+/* Add task row */
+.app-add-task-row {
+  background: rgba(255,255,255,0.92);
+}
+
+.app-plus {
+  font-weight: 700;
+  color: #2a7a2a;
+  background: #e7f5e7;
+}
+
+.app-task-input::placeholder {
+  color: #9aa3ad;
+}
+
+/* Tasks list */
+.app-tasks {
+  background: rgba(255,255,255,0.92);
+}
+
+.app-task-row {
+  line-height: 1.2;
+}
+
+.app-task-text {
+  color: #374151;
+}
+
+.app-task-done {
+  text-decoration: line-through;
+  color: #8b949e;
+  opacity: 0.85;
+}
+
+.app-task-highlight {
+  background: #fff7cc;
+}
+
+/* Bottom button */
+.app-add-list-btn {
+  padding: 12px 22px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+}
