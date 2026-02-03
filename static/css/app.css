@@ -1,4 +1,4 @@
-/* Background similar to screenshot (warm gradient) */
+﻿/* Background similar to screenshot (warm gradient) */
 .app-bg {
   min-height: 100vh;
   background: linear-gradient(180deg, #3c78c8 0%, #d7a022 70%, #d79a1d 100%);
@@ -13,13 +13,20 @@
 /* Card */
 .app-card {
   border: 0;
-  border-radius: 12px;
+  border-radius: 0 0 12px 12px;
   overflow: hidden;
 }
 
 .app-card-header {
   padding: 10px 12px;
-  background: linear-gradient(180deg, #2f77c6 0%, #1f61ab 100%);
+  background: linear-gradient(180deg, #3a82d6 0%, #2769b7 45%, #1b539b 100%);
+  border-radius: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(0,0,0,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.18),
+    inset 1px 0 0 rgba(0,0,0,0.18),
+    inset -1px 0 0 rgba(0,0,0,0.18),
+    inset 0 0 0 1px rgba(0,0,0,0.14);
 }
 
 .app-icon {
@@ -30,6 +37,34 @@
   justify-content: center;
   background: rgba(255,255,255,0.18);
   border-radius: 6px;
+}
+
+.app-icon-svg {
+  width: 18px;
+  height: 18px;
+}
+
+.app-icon-fill {
+  fill: #2f69b4;
+}
+
+.app-icon-bar {
+  fill: #25528f;
+}
+
+.app-icon-ring {
+  fill: #1f4680;
+}
+
+.app-icon-line {
+  fill: #1f4680;
+  opacity: 0.9;
+}
+
+.app-icon-stroke {
+  fill: none;
+  stroke: #1c3e6e;
+  stroke-width: 1.2;
 }
 
 .app-icon-btn {
@@ -44,13 +79,105 @@
 
 /* Add task row */
 .app-add-task-row {
-  background: rgba(255,255,255,0.92);
+  background: #d9d9d9;
+  padding: 0;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -1px 0 rgba(0,0,0,0.2);
+}
+
+.app-add-task-row .input-group {
+  align-items: center;
+  margin: 0;
+}
+
+.app-add-task-row .input-group-text {
+  background: transparent;
+  border: none;
+  padding: 0 8px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+}
+
+.app-add-task-row .input-group {
+  align-items: center;
+}
+
+.app-add-task-row .form-control {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  height: 28px;
+  border: 1px solid #cbd0d6;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 0 rgba(0,0,0,0.05);
+}
+
+.app-add-task-btn {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  height: 28px;
+  border: 1px solid #3d7d5b;
+  background: linear-gradient(180deg, #79b08a 0%, #5b8f6f 100%);
+  color: #ffffff;
+  font-weight: 600;
+  text-align: center;
+  min-width: 120px;
+  line-height: 15px;
 }
 
 .app-plus {
-  font-weight: 700;
-  color: #2a7a2a;
-  background: #e7f5e7;
+  position: relative;
+  width: 28px;
+  height: 28px;
+  display: inline-block;
+  transform: translateY(-6px);
+  text-indent: -9999px;
+}
+
+.app-plus::before,
+.app-plus::after {
+  content: "";
+  position: absolute;
+  background: #3b8d45;
+  border-radius: 0;
+  box-shadow: none;
+  background-image: none;
+}
+
+.app-plus::before {
+  width: 7px;
+  height: 22px;
+  left: 10.5px;
+  top: 3px;
+  z-index: 2;
+  background-image: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.35) 0,
+    rgba(0,0,0,0.18) 55%,
+    transparent 100%
+  );
+  background-size: 100% 4px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+}
+
+.app-plus::after {
+  width: 22px;
+  height: 7px;
+  left: 3px;
+  top: 10.5px;
+  z-index: 1;
+  background-image: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.35) 0,
+    rgba(0,0,0,0.18) 55%,
+    transparent 100%
+  );
+  background-size: 100% 4px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
 }
 
 .app-task-input::placeholder {
@@ -63,11 +190,49 @@
 }
 
 .app-task-row {
-  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  line-height: 1.1;
+  padding: 4px 8px;
+}
+
+.app-task-col {
+  padding: 0;
+}
+
+.app-task-col-check {
+  width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-task-col-check .form-check-input {
+  margin-top: 0;
+  transform: scale(0.9);
+}
+
+.app-task-col-text {
+  border-left: 1px solid rgba(231, 189, 189, 0.6);
+  padding: 0 12px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.app-task-col-actions {
+  border-left: 1px solid rgba(231, 189, 189, 0.6);
+  padding-left: 10px;
+  width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .app-task-text {
-  color: #374151;
+  color: #6b7280;
 }
 
 .app-task-done {
@@ -82,9 +247,35 @@
 
 /* Bottom button */
 .app-add-list-btn {
-  padding: 12px 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 220px;
+  padding: 10px 24px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.app-add-list-form {
+  display: inline-flex;
+  align-items: center;
+}
+
+.app-projects-grid {
+  justify-content: center;
+}
+
+.app-action-icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: #e9f2ff;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.9;
 }
 /* Auth pages */
 .auth-wrap {
@@ -251,4 +442,75 @@
   .auth-card-body {
     padding: 22px;
   }
+}
+
+/* Custom confirm modal */
+.app-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: grid;
+  place-items: center;
+}
+
+.app-modal[hidden] {
+  display: none;
+}
+
+.app-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(9, 15, 23, 0.7);
+  backdrop-filter: blur(2px);
+}
+
+.app-modal-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 520px);
+  border-radius: 16px;
+  background: #f7f7f7;
+  color: #1f2937;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.app-modal-header {
+  padding: 14px 18px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #ffffff;
+  background: linear-gradient(180deg, #3a82d6 0%, #2769b7 45%, #1b539b 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(0,0,0,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.18),
+    inset 1px 0 0 rgba(0,0,0,0.18),
+    inset -1px 0 0 rgba(0,0,0,0.18),
+    inset 0 0 0 1px rgba(0,0,0,0.14);
+}
+
+.app-modal-body {
+  padding: 14px 18px 6px;
+  color: #5f6b77;
+  background: #ffffff;
+}
+
+.app-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 18px 16px;
+  background: #ffffff;
+}
+
+.app-modal-btn {
+  min-width: 100px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.app-modal-open {
+  overflow: hidden;
 }

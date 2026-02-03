@@ -1,7 +1,9 @@
-﻿<div class="app-task-row d-flex align-items-start gap-2 px-2 py-2 border-top"
+﻿<div class="app-task-row d-flex align-items-stretch gap-2 px-2  border-top"
      data-task-id="{{ task.id }}">
 
-  <div class="pt-1">
+  <div id="project-{{ task.project_id }}-empty" hx-swap-oob="delete"></div>
+
+  <div class="pt-1 app-task-col app-task-col-check">
     <input class="form-check-input" type="checkbox" {% if task.is_done %}checked{% endif %}
       hx-post="{% url 'service:task_toggle_done' task.id %}"
       hx-target="closest .app-task-row"
@@ -9,25 +11,16 @@
     />
   </div>
 
-  <div class="flex-grow-1">
+  <div class="flex-grow-1 app-task-col app-task-col-text">
     <div class="app-task-text {% if task.is_done %}app-task-done{% endif %}">
       {{ task.name }}
     </div>
 
-    {% if task.priority or task.deadline %}
-      <div class="small text-muted mt-1">
-        {% if task.priority %}
-          <span class="me-2">Priority: <strong>{{ task.priority }}</strong></span>
-        {% endif %}
-        {% if task.deadline %}
-          <span>Deadline: <strong>{{ task.deadline }}</strong></span>
-        {% endif %}
-      </div>
-    {% endif %}
+
   </div>
 
   <!-- Task actions -->
-  <div class="d-flex align-items-center gap-1">
+  <div class="d-flex align-items-center gap-1 app-task-col app-task-col-actions">
     <button
       class="btn btn-sm btn-link text-muted app-icon-btn"
       title="Edit"
@@ -43,9 +36,11 @@
       title="Delete"
       type="button"
       hx-post="{% url 'service:task_delete' task.id %}"
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
       hx-target="closest .app-task-row"
       hx-swap="delete"
       hx-confirm="Delete this task?"
+      data-confirm="delete"
     >
       Delete
     </button>

@@ -9,7 +9,7 @@
   <div class="col-12">
 
     <!-- Projects grid -->
-    <div class="row g-4" id="projects-grid">
+    <div class="row g-4 justify-content-center app-projects-grid" id="projects-grid">
       {% for project in projects %}
         {% include "partials/project_card.html" with project=project task_form=task_form %}
       {% empty %}
@@ -23,19 +23,15 @@
 
     <!-- Add TODO List button (bottom) -->
     <div class="d-flex justify-content-center mt-4">
-      <form
-        class="d-flex flex-column flex-sm-row gap-2 align-items-stretch align-items-sm-center"
-        hx-post="{% url 'service:project_create' %}"
+      <button
+        class="btn btn-primary app-add-list-btn"
+        type="button"
+        hx-get="{% url 'service:project_create' %}"
         hx-target="#projects-grid"
         hx-swap="beforeend"
-        hx-disabled-elt="this"
       >
-        {% csrf_token %}
-        {{ project_form.name }}
-        <button class="btn btn-primary btn-lg app-add-list-btn" type="submit">
-          + Add TODO List
-        </button>
-      </form>
+        + Add TODO List
+      </button>
     </div>
 
   </div>

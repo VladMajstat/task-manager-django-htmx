@@ -17,6 +17,7 @@ class ProjectForm(forms.ModelForm):
                     "placeholder": "Project name...",
                     "maxlength": "120",
                     "required": True,
+                    "autofocus": "autofocus",
                 }
             )
         }
