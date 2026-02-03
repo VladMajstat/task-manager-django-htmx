@@ -3,6 +3,7 @@ from django.db import transaction
 from django.db.models import Max
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, render
+from django.utils import timezone
 
 from .forms import ProjectForm, TaskForm
 from .models import Project, Task
@@ -29,7 +30,7 @@ def project_create(request):
         return render(
             request,
             "partials/project_card.html",
-            {"project": project, "task_form": task_form},
+            {"project": project, "task_form": task_form, "due_soon_cutoff": _due_soon_cutoff()},
         )
 
     # Повертаємо форму з помилками
@@ -67,6 +68,8 @@ def project_delete(request, project_id: int):
 
     project = get_object_or_404(Project, id=project_id, owner=request.user)
     project.delete()
+    if not Project.objects.filter(owner=request.user).exists():
+        return render(request, "partials/project_empty.html")
     return HttpResponse("")
 
 
@@ -89,7 +92,11 @@ def task_create(request, project_id: int):
         )
         task.priority = max_priority + 1
         task.save()
-        return render(request, "partials/task_row.html", {"task": task})
+        return render(
+            request,
+            "partials/task_row.html",
+            {"task": task, "due_soon_cutoff": _due_soon_cutoff()},
+        )
 
     return render(request, "partials/task_form.html", {"form": form, "project": project})
 
@@ -106,7 +113,11 @@ def task_update(request, task_id: int):
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
             task = form.save()
-            return render(request, "partials/task_row.html", {"task": task})
+            return render(
+                request,
+                "partials/task_row.html",
+                {"task": task, "due_soon_cutoff": _due_soon_cutoff()},
+            )
         return render(request, "partials/task_form.html", {"form": form, "task": task})
 
     return HttpResponseBadRequest("Unsupported method")
@@ -140,7 +151,11 @@ def task_toggle_done(request, task_id: int):
     )
     task.priority = max_priority + 1
     task.save(update_fields=["is_done", "priority"])
-    return render(request, "partials/task_row.html", {"task": task})
+    return render(
+        request,
+        "partials/task_row.html",
+        {"task": task, "due_soon_cutoff": _due_soon_cutoff()},
+    )
 
 
 @login_required
@@ -174,4 +189,12 @@ def task_move(request, task_id: int, direction: str):
             task.save(update_fields=["priority"])
             next_task.save(update_fields=["priority"])
 
-    return render(request, "partials/task_list.html", {"project": task.project})
+    return render(
+        request,
+        "partials/task_list.html",
+        {"project": task.project, "due_soon_cutoff": _due_soon_cutoff()},
+    )
+
+
+def _due_soon_cutoff():
+    return timezone.localdate() + timezone.timedelta(days=1)

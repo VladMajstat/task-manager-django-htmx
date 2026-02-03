@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.utils import timezone
 
 from service.forms import ProjectForm, TaskForm
 from service.models import Project
@@ -12,6 +13,7 @@ def dashboard(request):
     )
     project_form = ProjectForm(owner=request.user)
     task_form = TaskForm()
+    due_soon_cutoff = timezone.localdate() + timezone.timedelta(days=1)
     return render(
         request,
         "main/dashboard.html",
@@ -19,5 +21,6 @@ def dashboard(request):
             "projects": projects,
             "project_form": project_form,
             "task_form": task_form,
+            "due_soon_cutoff": due_soon_cutoff,
         },
     )
