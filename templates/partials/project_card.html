@@ -27,13 +27,7 @@
     </div>
 
     <!-- Tasks list -->
-    <div class="app-tasks" id="project-{{ project.id }}-tasks">
-      {% for task in project.tasks.all %}
-        {% include "partials/task_row.html" with task=task %}
-      {% empty %}
-        <div id="project-{{ project.id }}-empty" class="px-3 py-3 text-muted small">No tasks yet.</div>
-      {% endfor %}
-    </div>
+    {% include "partials/task_list.html" with project=project %}
 
   </section>
 </div>
