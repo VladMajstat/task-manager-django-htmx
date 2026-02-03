@@ -30,7 +30,12 @@ class ProjectForm(forms.ModelForm):
         name = (self.cleaned_data.get("name") or "").strip()
         if not name:
             raise forms.ValidationError("Project name is required.")
-        if self.owner and Project.objects.filter(owner=self.owner, name=name).exclude(pk=self.instance.pk).exists():
+        if (
+            self.owner
+            and Project.objects.filter(owner=self.owner, name=name)
+            .exclude(pk=self.instance.pk)
+            .exists()
+        ):
             raise forms.ValidationError("You already have a project with this name.")
         return name
 

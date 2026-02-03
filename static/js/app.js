@@ -119,3 +119,119 @@
   document.addEventListener("DOMContentLoaded", updateProjectsEmpty);
   document.body.addEventListener("htmx:afterSwap", updateProjectsEmpty);
 })();
+
+(() => {
+  const requiredMessage = "This field is required.";
+  const deadlineMessage = "Please choose today or a future date.";
+
+  const ensureFeedback = (field) => {
+    let feedback = field.parentElement?.querySelector(".invalid-feedback");
+    if (!feedback) {
+      feedback = document.createElement("div");
+      feedback.className = "invalid-feedback";
+      field.parentElement?.appendChild(feedback);
+    }
+    return feedback;
+  };
+
+  const validateField = (field) => {
+    if (field.disabled || field.type === "hidden") {
+      return true;
+    }
+    const form = field.closest("form");
+    const quietMode = form?.dataset.validate === "quiet";
+    let isValid = true;
+    let message = "";
+
+    if (field.required && !field.value.trim()) {
+      isValid = false;
+      message = requiredMessage;
+    }
+
+    if (isValid && field.type === "date" && field.value) {
+      const min = field.getAttribute("min");
+      if (min && field.value < min) {
+        isValid = false;
+        message = deadlineMessage;
+      }
+    }
+
+    if (quietMode) {
+      field.classList.remove("is-invalid");
+      const feedback = field.parentElement?.querySelector(".invalid-feedback");
+      if (feedback) {
+        feedback.textContent = "";
+        feedback.style.display = "none";
+      }
+      return isValid;
+    }
+    field.classList.toggle("is-invalid", !isValid);
+    if (!isValid) {
+      const feedback = ensureFeedback(field);
+      feedback.textContent = message;
+      feedback.style.display = "block";
+    } else {
+      const feedback = field.parentElement?.querySelector(".invalid-feedback");
+      if (feedback) {
+        feedback.textContent = "";
+        feedback.style.display = "none";
+      }
+    }
+    return isValid;
+  };
+
+  const validateForm = (form) => {
+    const fields = form.querySelectorAll("input, textarea, select");
+    let ok = true;
+    fields.forEach((field) => {
+      if (!validateField(field)) {
+        ok = false;
+      }
+    });
+    return ok;
+  };
+
+  const bindValidation = (root = document) => {
+    root.querySelectorAll("form").forEach((form) => {
+      if (form.dataset.liveValidated === "1") {
+        return;
+      }
+      form.dataset.liveValidated = "1";
+
+      form.addEventListener("input", (event) => {
+        if (event.target instanceof HTMLElement) {
+          validateField(event.target);
+        }
+      });
+
+      form.addEventListener("blur", (event) => {
+        if (event.target instanceof HTMLElement) {
+          validateField(event.target);
+        }
+      }, true);
+
+      form.addEventListener("submit", (event) => {
+        if (!validateForm(form)) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      });
+    });
+  };
+
+  document.addEventListener("DOMContentLoaded", () => bindValidation());
+  document.body.addEventListener("htmx:afterSwap", (event) => {
+    bindValidation(event.target);
+  });
+
+  document.body.addEventListener("htmx:beforeRequest", (event) => {
+    const form = event.target?.closest?.("form");
+    if (!form || form.dataset.validate !== "quiet") {
+      return;
+    }
+    if (!validateForm(form)) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  });
+})();

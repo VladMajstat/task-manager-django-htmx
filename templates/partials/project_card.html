@@ -14,6 +14,7 @@
         hx-swap="afterbegin"
         hx-disabled-elt="this"
         hx-on="htmx:afterRequest: this.reset()"
+        data-validate="quiet"
       >
         {% csrf_token %}
         <span class="input-group-text app-plus" title="Add" aria-hidden="true">+</span>
