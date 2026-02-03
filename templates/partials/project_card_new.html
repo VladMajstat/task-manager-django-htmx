@@ -1,0 +1,59 @@
+<div class="col-12 col-lg-8">
+  <section class="card app-card shadow-sm">
+
+    <div class="app-card-header d-flex align-items-center justify-content-between">
+      <form
+        class="d-flex align-items-center gap-2 flex-grow-1"
+        hx-post="{% url 'service:project_create' %}"
+        hx-target="closest .col-12"
+        hx-swap="outerHTML"
+        hx-disabled-elt="this"
+      >
+        {% csrf_token %}
+        <span class="app-icon" aria-hidden="true">
+          <svg class="app-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+            <rect class="app-icon-fill" x="3" y="5" width="18" height="16" rx="2" ry="2"></rect>
+            <rect class="app-icon-bar" x="3" y="8" width="18" height="2"></rect>
+            <rect class="app-icon-ring" x="6.5" y="3" width="2.5" height="4"></rect>
+            <rect class="app-icon-ring" x="15" y="3" width="2.5" height="4"></rect>
+            <rect class="app-icon-line" x="6" y="11" width="12" height="1.6"></rect>
+            <rect class="app-icon-line" x="6" y="14" width="12" height="1.6"></rect>
+            <rect class="app-icon-line" x="6" y="17" width="12" height="1.6"></rect>
+            <rect class="app-icon-stroke" x="3" y="5" width="18" height="16" rx="2" ry="2"></rect>
+          </svg>
+        </span>
+
+        <div class="flex-grow-1">
+          {{ form.name }}
+          {% if form.name.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.name.errors|join:", " }}
+            </div>
+          {% endif %}
+        </div>
+
+        <button class="btn btn-sm btn-light" type="submit">Save</button>
+      </form>
+    </div>
+
+    <div class="app-add-task-row p-2 border-bottom">
+      <div class="input-group">
+        <span class="input-group-text app-plus" title="Add" aria-hidden="true">+</span>
+        <input
+          class="form-control app-task-input"
+          type="text"
+          placeholder="Start typing here to create a task..."
+          disabled
+        />
+        <button class="btn btn-success app-add-task-btn" type="button" disabled>
+          Add Task
+        </button>
+      </div>
+    </div>
+
+    <div class="app-tasks">
+      <div class="px-3 py-3 text-muted small">No tasks yet.</div>
+    </div>
+
+  </section>
+</div>

@@ -29,7 +29,18 @@
     <header class="app-topbar">
       <div class="container py-2 d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-2">
-          <span class="app-icon" aria-hidden="true">LIST</span>
+          <span class="app-icon" aria-hidden="true">
+            <svg class="app-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <rect class="app-icon-fill" x="3" y="5" width="18" height="16" rx="2" ry="2"></rect>
+              <rect class="app-icon-bar" x="3" y="8" width="18" height="2"></rect>
+              <rect class="app-icon-ring" x="6.5" y="3" width="2.5" height="4"></rect>
+              <rect class="app-icon-ring" x="15" y="3" width="2.5" height="4"></rect>
+              <rect class="app-icon-line" x="6" y="11" width="12" height="1.6"></rect>
+              <rect class="app-icon-line" x="6" y="14" width="12" height="1.6"></rect>
+              <rect class="app-icon-line" x="6" y="17" width="12" height="1.6"></rect>
+              <rect class="app-icon-stroke" x="3" y="5" width="18" height="16" rx="2" ry="2"></rect>
+            </svg>
+          </span>
           <strong class="text-white">Task manager</strong>
         </div>
 
@@ -57,6 +68,20 @@
         © {{ now|date:"Y" }} Task manager
       </div>
     </footer>
+
+    <div class="app-modal" id="app-confirm" hidden>
+      <div class="app-modal-backdrop" data-confirm-cancel></div>
+      <div class="app-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="app-confirm-title">
+        <div class="app-modal-header">
+          <span class="app-modal-title" id="app-confirm-title">Confirm action</span>
+        </div>
+        <div class="app-modal-body" id="app-confirm-body"></div>
+        <div class="app-modal-footer">
+          <button class="btn btn-light app-modal-btn" type="button" data-confirm-ok>OK</button>
+          <button class="btn btn-light app-modal-btn" type="button" data-confirm-cancel>Cancel</button>
+        </div>
+      </div>
+    </div>
 
     <script src="{% static 'js/app.js' %}"></script>
     {% block scripts %}{% endblock %}

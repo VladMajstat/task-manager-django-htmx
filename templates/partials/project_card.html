@@ -1,37 +1,8 @@
-﻿<div class="col-12 col-lg-6">
+﻿<div class="col-12 col-lg-8">
   <section class="card app-card shadow-sm" data-project-id="{{ project.id }}">
 
     <!-- Card header -->
-    <div class="app-card-header d-flex align-items-center justify-content-between">
-      <div class="d-flex align-items-center gap-2">
-        <span class="app-icon" aria-hidden="true">LIST</span>
-        <h2 class="h6 m-0 text-white">{{ project.name }}</h2>
-      </div>
-
-      <div class="d-flex align-items-center gap-2">
-        <button
-          class="btn btn-sm btn-link text-white-50 app-icon-btn"
-          title="Edit"
-          type="button"
-          hx-get="{% url 'service:project_update' project.id %}"
-          hx-target="closest .app-card"
-          hx-swap="outerHTML"
-        >
-          Edit
-        </button>
-        <button
-          class="btn btn-sm btn-link text-white-50 app-icon-btn"
-          title="Delete"
-          type="button"
-          hx-post="{% url 'service:project_delete' project.id %}"
-          hx-target="closest .col-12"
-          hx-swap="delete"
-          hx-confirm="Delete this project?"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
+    {% include "partials/project_header.html" with project=project %}
 
     <!-- Add task row -->
     <div class="app-add-task-row p-2 border-bottom">
@@ -41,9 +12,10 @@
         hx-target="#project-{{ project.id }}-tasks"
         hx-swap="afterbegin"
         hx-disabled-elt="this"
+        hx-on="htmx:afterRequest: this.reset()"
       >
         {% csrf_token %}
-        <span class="input-group-text app-plus" title="Add">+</span>
+        <span class="input-group-text app-plus" title="Add" aria-hidden="true">+</span>
         {{ task_form.name }}
         <button
           class="btn btn-success app-add-task-btn"
@@ -59,7 +31,7 @@
       {% for task in project.tasks.all %}
         {% include "partials/task_row.html" with task=task %}
       {% empty %}
-        <div class="px-3 py-3 text-muted small">No tasks yet.</div>
+        <div id="project-{{ project.id }}-empty" class="px-3 py-3 text-muted small">No tasks yet.</div>
       {% endfor %}
     </div>
 

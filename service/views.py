@@ -12,6 +12,9 @@ def _is_htmx(request) -> bool:
 
 @login_required
 def project_create(request):
+    if request.method == "GET":
+        form = ProjectForm(owner=request.user)
+        return render(request, "partials/project_card_new.html", {"form": form})
     if request.method != "POST":
         return HttpResponseBadRequest("POST required")
 
@@ -36,20 +39,21 @@ def project_update(request, project_id: int):
     project = get_object_or_404(Project, id=project_id, owner=request.user)
 
     if request.method == "GET":
+        if request.GET.get("mode") == "view":
+            return render(request, "partials/project_header.html", {"project": project})
         form = ProjectForm(instance=project, owner=request.user)
-        return render(request, "partials/project_form.html", {"form": form, "project": project})
+        return render(request, "partials/project_header_form.html", {"form": form, "project": project})
 
     if request.method == "POST":
         form = ProjectForm(request.POST, instance=project, owner=request.user)
         if form.is_valid():
             project = form.save()
-            task_form = TaskForm()
             return render(
                 request,
-                "partials/project_card.html",
-                {"project": project, "task_form": task_form},
+                "partials/project_header.html",
+                {"project": project},
             )
-        return render(request, "partials/project_form.html", {"form": form, "project": project})
+        return render(request, "partials/project_header_form.html", {"form": form, "project": project})
 
     return HttpResponseBadRequest("Unsupported method")
 
@@ -61,7 +65,7 @@ def project_delete(request, project_id: int):
 
     project = get_object_or_404(Project, id=project_id, owner=request.user)
     project.delete()
-    return HttpResponse(status=204)
+    return HttpResponse("")
 
 
 @login_required
@@ -105,8 +109,11 @@ def task_delete(request, task_id: int):
         return HttpResponseBadRequest("POST required")
 
     task = get_object_or_404(Task, id=task_id, project__owner=request.user)
+    project = task.project
     task.delete()
-    return HttpResponse(status=204)
+    if project and not project.tasks.exists():
+        return render(request, "partials/task_empty.html", {"project": project})
+    return HttpResponse("")
 
 
 @login_required

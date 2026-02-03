@@ -12,8 +12,8 @@
     <div class="p-3 bg-white">
       <form
         hx-post="{% if project %}{% url 'service:project_update' project.id %}{% else %}{% url 'service:project_create' %}{% endif %}"
-        hx-target="{% if project %}closest .app-card{% else %}#projects-grid{% endif %}"
-        hx-swap="{% if project %}outerHTML{% else %}beforeend{% endif %}"
+        hx-target="{% if project %}closest .app-card{% else %}closest .col-12{% endif %}"
+        hx-swap="outerHTML"
         hx-disabled-elt="this"
       >
         {% csrf_token %}
