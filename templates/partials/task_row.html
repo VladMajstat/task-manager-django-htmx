@@ -1,6 +1,8 @@
 <div id="project-{{ task.project_id }}-empty" hx-swap-oob="delete"></div>
-<div class="app-task-row d-flex align-items-stretch gap-2 px-2  border-top"
-     data-task-id="{{ task.id }}">
+<div class="app-task-row d-flex align-items-stretch gap-2 px-2 border-top{% if task.deadline and not task.is_done and due_soon_cutoff and task.deadline <= due_soon_cutoff %} app-task-due-soon{% endif %}"
+     data-task-id="{{ task.id }}"
+     data-deadline="{% if task.deadline %}{{ task.deadline|date:'Y-m-d' }}{% endif %}"
+     data-done="{% if task.is_done %}1{% else %}0{% endif %}">
 
   <div class="pt-1 app-task-col app-task-col-check">
     <input class="form-check-input app-task-check" type="checkbox" {% if task.is_done %}checked{% endif %}

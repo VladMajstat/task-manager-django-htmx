@@ -36,6 +36,10 @@ class ProjectForm(forms.ModelForm):
 
 
 class TaskForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["deadline"].widget.attrs["min"] = timezone.localdate().isoformat()
+
     class Meta:
         model = Task
         fields = ["name", "deadline", "is_done"]

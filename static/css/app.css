@@ -335,6 +335,14 @@
   background: #fff7cc;
 }
 
+.app-task-due-soon {
+  background: #ffe2e2;
+}
+
+.app-task-due-soon:hover {
+  background: #ffd1d1;
+}
+
 .app-task-col-actions > * {
   opacity: 0;
   pointer-events: none;
