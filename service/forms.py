@@ -38,7 +38,7 @@ class ProjectForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ["name", "priority", "deadline", "is_done"]
+        fields = ["name", "deadline", "is_done"]
         widgets = {
             "name": forms.TextInput(
                 attrs={
@@ -47,14 +47,6 @@ class TaskForm(forms.ModelForm):
                     "maxlength": "255",
                     "required": True,
                     "autocomplete": "off",
-                }
-            ),
-            "priority": forms.NumberInput(
-                attrs={
-                    "class": "form-control",
-                    "min": 0,
-                    "max": 999,
-                    "step": 1,
                 }
             ),
             "deadline": forms.DateInput(
@@ -73,14 +65,6 @@ class TaskForm(forms.ModelForm):
         if not name:
             raise forms.ValidationError("Task name is required.")
         return name
-
-    def clean_priority(self) -> int:
-        priority = self.cleaned_data.get("priority")
-        if priority is None:
-            return 0
-        if priority < 0:
-            raise forms.ValidationError("Priority must be >= 0.")
-        return priority
 
     def clean_deadline(self):
         deadline = self.cleaned_data.get("deadline")

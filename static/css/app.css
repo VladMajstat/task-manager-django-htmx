@@ -15,6 +15,8 @@
   border: 0;
   border-radius: 0 0 12px 12px;
   overflow: hidden;
+  max-width: 760px;
+  margin: 0 auto;
 }
 
 .app-card-header {
@@ -90,16 +92,21 @@
 .app-add-task-row .input-group {
   align-items: center;
   margin: 0;
+  padding-left: 6px;
+  flex-wrap: nowrap;
 }
 
 .app-add-task-row .input-group-text {
   background: transparent;
   border: none;
-  padding: 0 8px 0 0;
+  padding: 0 2px 0 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
+  width: 20px;
+  flex: 0 0 20px;
+  margin-right: 20px;
+  z-index: 2;
 }
 
 .app-add-task-row .input-group {
@@ -114,6 +121,16 @@
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 0 rgba(0,0,0,0.05);
 }
 
+.app-add-task-row .app-task-input {
+  max-width: none;
+  flex: 1 1 auto;
+  margin-left: 0;
+  margin-right: 0;
+  transform: none;
+  z-index: 1;
+}
+
+
 .app-add-task-btn {
   padding-top: 2px;
   padding-bottom: 2px;
@@ -125,6 +142,7 @@
   text-align: center;
   min-width: 120px;
   line-height: 15px;
+  transform: none;
 }
 
 .app-plus {
@@ -132,7 +150,7 @@
   width: 28px;
   height: 28px;
   display: inline-block;
-  transform: translateY(-6px);
+  transform: translateY(-2px);
   text-indent: -9999px;
 }
 
@@ -213,22 +231,90 @@
 }
 
 .app-task-col-text {
-  border-left: 1px solid rgba(231, 189, 189, 0.6);
   padding: 0 12px;
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   text-align: left;
+  position: relative;
 }
 
 .app-task-col-actions {
-  border-left: 1px solid rgba(231, 189, 189, 0.6);
   padding-left: 10px;
-  width: 90px;
+  width: 140px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  position: relative;
+}
+
+.app-task-col-actions::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 0.5px;
+  background: rgba(107, 114, 128, 0.55);
+  left: 20px;
+  transform: translateZ(0);
+}
+
+.app-task-col-actions > * {
+  position: relative;
+  padding-right: 3px;
+  margin-right: 1px;
+}
+
+.app-task-col-actions > *:last-child {
+  padding-right: 0;
+  margin-right: 0;
+}
+
+
+.app-task-col-actions > *:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  background: rgba(107, 114, 128, 0.35);
+}
+
+.app-task-col-actions > .app-task-move-stack::after {
+  right: -8px;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+}
+
+.app-task-col-actions > .app-task-move-stack + .app-icon-btn {
+  transform: translateX(6px);
+}
+
+.app-task-col-text::before,
+.app-task-col-text::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  background: rgba(107, 114, 128, 0.55);
+  left: -5px;
+  transform: translateZ(0);
+}
+
+.app-task-col-text::before {
+  width: 0.5px;
+}
+
+.app-task-col-text::after {
+  left: 0px;
+  width: 0.5px;
+}
+
+.app-task-check {
+  border: 1.5px solid #6b7280;
 }
 
 .app-task-text {
@@ -243,6 +329,78 @@
 
 .app-task-highlight {
   background: #fff7cc;
+}
+
+.app-task-row:hover {
+  background: #fff7cc;
+}
+
+.app-task-col-actions > * {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+
+.app-task-row:hover .app-task-col-actions > * {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.app-task-move-btn {
+  font-size: 0.45rem;
+  line-height: 1;
+  padding: 1px 2px !important;
+}
+
+.app-task-move-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 1px 0;
+}
+
+.app-task-move-divider {
+  width: 70%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.12);
+  margin: 1px 0;
+}
+
+.app-task-edit-form .form-control {
+  height: 24px;
+  padding: 2px 6px;
+  font-size: 0.85rem;
+}
+
+.app-task-edit-form input[type="date"] {
+  width: 140px;
+}
+
+.app-task-edit-form input[type="number"] {
+  width: 80px;
+}
+
+.app-task-edit-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 20px;
+}
+
+.app-task-edit-actions .btn {
+  min-width: 64px;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 12px;
+  padding-right: 12px;
+  line-height: 1;
 }
 
 /* Bottom button */
@@ -271,11 +429,27 @@
   width: 18px;
   height: 18px;
   fill: none;
-  stroke: #e9f2ff;
+  stroke: #1f2937;
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
   opacity: 0.9;
+}
+
+.app-card-header .app-action-icon {
+  stroke: #c0c6cf;
+  opacity: 0.95;
+}
+
+.app-card-header .app-icon-btn {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+
+.app-card-header:hover .app-icon-btn {
+  opacity: 1;
+  pointer-events: auto;
 }
 /* Auth pages */
 .auth-wrap {

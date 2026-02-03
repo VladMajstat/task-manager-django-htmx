@@ -1,4 +1,6 @@
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.db.models import Max
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, render
 
@@ -79,6 +81,13 @@ def task_create(request, project_id: int):
     if form.is_valid():
         task = form.save(commit=False)
         task.project = project
+        max_priority = (
+            Task.objects.filter(project=project, is_done=False).aggregate(Max("priority"))[
+                "priority__max"
+            ]
+            or 0
+        )
+        task.priority = max_priority + 1
         task.save()
         return render(request, "partials/task_row.html", {"task": task})
 
@@ -123,5 +132,46 @@ def task_toggle_done(request, task_id: int):
 
     task = get_object_or_404(Task, id=task_id, project__owner=request.user)
     task.is_done = not task.is_done
-    task.save(update_fields=["is_done"])
+    max_priority = (
+        Task.objects.filter(project=task.project, is_done=task.is_done).aggregate(Max("priority"))[
+            "priority__max"
+        ]
+        or 0
+    )
+    task.priority = max_priority + 1
+    task.save(update_fields=["is_done", "priority"])
     return render(request, "partials/task_row.html", {"task": task})
+
+
+@login_required
+def task_move(request, task_id: int, direction: str):
+    if request.method != "POST":
+        return HttpResponseBadRequest("POST required")
+    if direction not in {"up", "down"}:
+        return HttpResponseBadRequest("Invalid direction")
+
+    task = get_object_or_404(Task, id=task_id, project__owner=request.user)
+
+    with transaction.atomic():
+        tasks = list(
+            Task.objects.select_for_update()
+            .filter(project=task.project, is_done=task.is_done)
+            .order_by("priority", "created_at", "id")
+        )
+        try:
+            index = next(i for i, item in enumerate(tasks) if item.id == task.id)
+        except StopIteration:
+            return HttpResponseBadRequest("Task not found")
+
+        if direction == "up" and index > 0:
+            prev_task = tasks[index - 1]
+            task.priority, prev_task.priority = prev_task.priority, task.priority
+            task.save(update_fields=["priority"])
+            prev_task.save(update_fields=["priority"])
+        elif direction == "down" and index < len(tasks) - 1:
+            next_task = tasks[index + 1]
+            task.priority, next_task.priority = next_task.priority, task.priority
+            task.save(update_fields=["priority"])
+            next_task.save(update_fields=["priority"])
+
+    return render(request, "partials/task_list.html", {"project": task.project})
