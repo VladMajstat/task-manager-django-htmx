@@ -30,7 +30,11 @@ def project_create(request):
         return render(
             request,
             "partials/project_card.html",
-            {"project": project, "task_form": task_form, "due_soon_cutoff": _due_soon_cutoff()},
+            {
+                "project": project,
+                "task_form": task_form,
+                "due_soon_cutoff": _due_soon_cutoff(),
+            },
         )
 
     # Повертаємо форму з помилками
@@ -45,7 +49,11 @@ def project_update(request, project_id: int):
         if request.GET.get("mode") == "view":
             return render(request, "partials/project_header.html", {"project": project})
         form = ProjectForm(instance=project, owner=request.user)
-        return render(request, "partials/project_header_form.html", {"form": form, "project": project})
+        return render(
+            request,
+            "partials/project_header_form.html",
+            {"form": form, "project": project},
+        )
 
     if request.method == "POST":
         form = ProjectForm(request.POST, instance=project, owner=request.user)
@@ -56,7 +64,11 @@ def project_update(request, project_id: int):
                 "partials/project_header.html",
                 {"project": project},
             )
-        return render(request, "partials/project_header_form.html", {"form": form, "project": project})
+        return render(
+            request,
+            "partials/project_header_form.html",
+            {"form": form, "project": project},
+        )
 
     return HttpResponseBadRequest("Unsupported method")
 

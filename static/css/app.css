@@ -624,6 +624,55 @@
   .auth-card-body {
     padding: 22px;
   }
+
+  .app-card {
+    max-width: 100%;
+  }
+
+  .app-task-row {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  .app-task-col-check {
+    width: 32px;
+  }
+
+  .app-task-col-text {
+    padding: 0 8px;
+    min-width: 0;
+  }
+
+  .app-task-col-actions {
+    width: auto;
+    padding-left: 6px;
+    margin-left: auto;
+  }
+
+  .app-task-col-actions::before {
+    display: none;
+  }
+
+  .app-task-col-actions > *:not(:last-child)::after {
+    display: none;
+  }
+
+  .app-task-edit-form {
+    flex-wrap: wrap;
+  }
+
+  .app-task-edit-form .form-control {
+    width: 100%;
+  }
+
+  .app-task-edit-form input[type="date"] {
+    width: 100%;
+  }
+
+  .app-add-list-btn {
+    min-width: 0;
+    width: 100%;
+  }
 }
 
 /* Custom confirm modal */
