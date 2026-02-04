@@ -7,6 +7,7 @@
 
     <!-- Add task row -->
     <div class="app-add-task-row p-2 border-bottom">
+      {% comment %} Форма додавання задачі: HTMX POST створює задачу і вставляє рядок {% endcomment %}
       <form
         class="input-group"
         hx-post="{% url 'service:task_create' project.id %}"
@@ -19,6 +20,7 @@
         {% csrf_token %}
         <span class="input-group-text app-plus" title="Add" aria-hidden="true">+</span>
         {{ task_form.name }}
+        {% comment %} Кнопка додати задачу: відправити форму {% endcomment %}
         <button
           class="btn btn-success app-add-task-btn"
           type="submit"

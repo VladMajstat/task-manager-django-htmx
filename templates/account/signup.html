@@ -15,6 +15,7 @@
         </div>
       {% endif %}
 
+      {% comment %} Форма реєстрації: POST на account_signup {% endcomment %}
       <form class="auth-form" method="post" action="{% url 'account_signup' %}">
         {% csrf_token %}
         {{ redirect_field }}
@@ -55,10 +56,12 @@
           {% endif %}
         </div>
 
+        {% comment %} Кнопка реєстрації: відправити форму {% endcomment %}
         <button class="auth-btn" type="submit">Create account</button>
       </form>
 
       <div class="auth-footer">
+        {% comment %} Посилання на вхід {% endcomment %}
         <a href="{% url 'account_login' %}">Already have an account? Sign in</a>
       </div>
     </div>
