@@ -1,3 +1,4 @@
+// Модалка підтвердження для HTMX-дій (наприклад, видалення).
 (() => {
   const modal = document.getElementById("app-confirm");
   if (!modal) {
@@ -10,11 +11,13 @@
 
   let pending = null;
 
+  // Закрити модалку і прибрати стан з body.
   const closeModal = () => {
     modal.hidden = true;
     document.body.classList.remove("app-modal-open");
   };
 
+  // Відкрити модалку і зберегти callback для OK.
   const openModal = (message, onConfirm) => {
     body.textContent = message || "Are you sure?";
     pending = onConfirm;
@@ -38,6 +41,7 @@
     });
   });
 
+  // Перехопити HTMX confirm і показати кастомну модалку.
   const confirmHandler = (event) => {
     if (!event.detail || typeof event.detail.issueRequest !== "function") {
       return;
@@ -56,9 +60,11 @@
   }
 })();
 
+// Підсвітка задач із дедлайном "сьогодні/завтра".
 (() => {
   const dueSoonClass = "app-task-due-soon";
 
+  // Розібрати YYYY-MM-DD у Date або повернути null.
   const parseDate = (value) => {
     if (!value) {
       return null;
@@ -76,6 +82,7 @@
     return new Date(year, month - 1, day);
   };
 
+  // Перевірити, чи дедлайн не пізніше завтрашнього дня.
   const isDueSoon = (deadline) => {
     if (!deadline) {
       return false;
@@ -87,6 +94,7 @@
     return deadline <= cutoff;
   };
 
+  // Оновити підсвітку для задач у заданому корені.
   const updateDueSoon = (root = document) => {
     const rows = root.querySelectorAll(".app-task-row[data-deadline]");
     rows.forEach((row) => {
@@ -103,7 +111,9 @@
   });
 })();
 
+// Прибрати повідомлення "No projects yet", якщо є картки.
 (() => {
+  // Приховати empty-state коли в сітці є проєкти.
   const updateProjectsEmpty = () => {
     const grid = document.getElementById("projects-grid");
     if (!grid) {
@@ -120,10 +130,12 @@
   document.body.addEventListener("htmx:afterSwap", updateProjectsEmpty);
 })();
 
+// Локальна валідація форм (required + дата).
 (() => {
   const requiredMessage = "This field is required.";
   const deadlineMessage = "Please choose today or a future date.";
 
+  // Створити блок для тексту помилки, якщо його немає.
   const ensureFeedback = (field) => {
     let feedback = field.parentElement?.querySelector(".invalid-feedback");
     if (!feedback) {
@@ -134,6 +146,7 @@
     return feedback;
   };
 
+  // Перевірити одне поле і показати/сховати помилку.
   const validateField = (field) => {
     if (field.disabled || field.type === "hidden") {
       return true;
@@ -180,6 +193,7 @@
     return isValid;
   };
 
+  // Перевірити всі поля форми.
   const validateForm = (form) => {
     const fields = form.querySelectorAll("input, textarea, select");
     let ok = true;
@@ -191,6 +205,7 @@
     return ok;
   };
 
+  // Підключити live-валидацію для форм у корені.
   const bindValidation = (root = document) => {
     root.querySelectorAll("form").forEach((form) => {
       if (form.dataset.liveValidated === "1") {
