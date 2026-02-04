@@ -2,7 +2,7 @@
   <section class="card app-card shadow-sm">
 
     <div class="app-card-header d-flex align-items-center justify-content-between">
-      {% comment %} Форма створення проєкту: HTMX POST замінює блок картки {% endcomment %}
+      {% comment %} Project create form: HTMX POST replaces the card block {% endcomment %}
       <form
         class="d-flex align-items-center gap-2 flex-grow-1"
         hx-post="{% url 'service:project_create' %}"
@@ -33,7 +33,7 @@
           {% endif %}
         </div>
 
-        {% comment %} Кнопка збереження проєкту {% endcomment %}
+        {% comment %} Save project button {% endcomment %}
         <button class="btn btn-sm btn-light" type="submit">Save</button>
       </form>
     </div>
@@ -47,7 +47,7 @@
           placeholder="Start typing here to create a task..."
           disabled
         />
-        {% comment %} Кнопка додати задачу: неактивна, доки проєкт не створено {% endcomment %}
+        {% comment %} Add task button: disabled until the project exists {% endcomment %}
         <button class="btn btn-success app-add-task-btn" type="button" disabled>
           Add Task
         </button>

@@ -1,5 +1,5 @@
 <div class="app-card-header d-flex align-items-center justify-content-between">
-  {% comment %} Форма редагування назви: HTMX POST замінює header {% endcomment %}
+  {% comment %} Header edit form: HTMX POST replaces the header {% endcomment %}
   <form
     class="d-flex align-items-center gap-2 flex-grow-1"
     hx-post="{% url 'service:project_update' project.id %}"
@@ -30,9 +30,9 @@
       {% endif %}
     </div>
 
-    {% comment %} Кнопка збереження назви {% endcomment %}
+    {% comment %} Save name button {% endcomment %}
     <button class="btn btn-sm btn-light" type="submit">Save</button>
-    {% comment %} Кнопка скасування: HTMX GET повертає header без форми {% endcomment %}
+    {% comment %} Cancel button: HTMX GET restores the header view {% endcomment %}
     <button
       class="btn btn-sm btn-link text-white-50 app-icon-btn"
       type="button"

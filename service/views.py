@@ -10,13 +10,13 @@ from .models import Project, Task
 
 
 def _is_htmx(request) -> bool:
-    # Перевіряє, чи запит надійшов від HTMX.
+    # Check whether the request came from HTMX.
     return request.headers.get("HX-Request") == "true"
 
 
 @login_required
 def project_create(request):
-    # Створення проєкту: GET показує форму, POST зберігає і рендерить картку.
+    # Create project: GET shows the form, POST saves and renders the card.
     if request.method == "GET":
         form = ProjectForm(owner=request.user)
         return render(request, "partials/project_card_new.html", {"form": form})
@@ -39,13 +39,13 @@ def project_create(request):
             },
         )
 
-    # Повертаємо форму з помилками
+    # Return the form with validation errors.
     return render(request, "partials/project_form.html", {"form": form})
 
 
 @login_required
 def project_update(request, project_id: int):
-    # Редагування проєкту: GET показує header або форму, POST зберігає зміни.
+    # Update project: GET shows header or form, POST saves changes.
     project = get_object_or_404(Project, id=project_id, owner=request.user)
 
     if request.method == "GET":
@@ -78,7 +78,7 @@ def project_update(request, project_id: int):
 
 @login_required
 def project_delete(request, project_id: int):
-    # Видалення проєкту і показ empty-state, якщо проєктів більше немає.
+    # Delete project and show empty-state if none remain.
     if request.method != "POST":
         return HttpResponseBadRequest("POST required")
 
@@ -91,7 +91,7 @@ def project_delete(request, project_id: int):
 
 @login_required
 def task_create(request, project_id: int):
-    # Створення задачі в проєкті, присвоює пріоритет як max+1 серед невиконаних.
+    # Create task and assign priority as max+1 among not-done tasks.
     if request.method != "POST":
         return HttpResponseBadRequest("POST required")
 
@@ -120,7 +120,7 @@ def task_create(request, project_id: int):
 
 @login_required
 def task_update(request, task_id: int):
-    # Редагування задачі: GET показує форму, POST зберігає і рендерить рядок.
+    # Update task: GET shows the form, POST saves and renders the row.
     task = get_object_or_404(Task, id=task_id, project__owner=request.user)
 
     if request.method == "GET":
@@ -143,7 +143,7 @@ def task_update(request, task_id: int):
 
 @login_required
 def task_delete(request, task_id: int):
-    # Видалення задачі і показ empty-state, якщо задач більше немає.
+    # Delete task and show empty-state if none remain.
     if request.method != "POST":
         return HttpResponseBadRequest("POST required")
 
@@ -157,7 +157,7 @@ def task_delete(request, task_id: int):
 
 @login_required
 def task_toggle_done(request, task_id: int):
-    # Перемикає done/undone і переносить задачу в кінець відповідного списку.
+    # Toggle done/undone and move task to the end of that list.
     if request.method != "POST":
         return HttpResponseBadRequest("POST required")
 
@@ -180,7 +180,7 @@ def task_toggle_done(request, task_id: int):
 
 @login_required
 def task_move(request, task_id: int, direction: str):
-    # Переміщення задачі вгору/вниз шляхом обміну пріоритетів.
+    # Move task up/down by swapping priorities.
     if request.method != "POST":
         return HttpResponseBadRequest("POST required")
     if direction not in {"up", "down"}:
@@ -218,5 +218,5 @@ def task_move(request, task_id: int, direction: str):
 
 
 def _due_soon_cutoff():
-    # Дата, до якої вважаємо дедлайн "скоро" (сьогодні + 1 день).
+    # Date threshold for "due soon" (today + 1 day).
     return timezone.localdate() + timezone.timedelta(days=1)
