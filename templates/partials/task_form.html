@@ -4,7 +4,7 @@
     <input class="form-check-input" type="checkbox" disabled />
   </div>
 
-  {% comment %} Форма створення/редагування задачі: HTMX POST замінює рядок {% endcomment %}
+  {% comment %} Create/edit task form: HTMX POST replaces the row {% endcomment %}
   <form
     class="app-task-edit-form d-flex align-items-center gap-2 flex-grow-1"
     hx-post="{% if task %}{% url 'service:task_update' task.id %}{% elif project %}{% url 'service:task_create' project.id %}{% endif %}"
@@ -31,7 +31,7 @@
     </div>
 
     <div class="app-task-col app-task-col-actions app-task-edit-actions">
-      {% comment %} Кнопка збереження задачі {% endcomment %}
+      {% comment %} Save task button {% endcomment %}
       <button class="btn btn-success btn-sm" type="submit">Save</button>
     </div>
   </form>

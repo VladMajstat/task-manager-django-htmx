@@ -50,12 +50,12 @@
               {{ request.user.username }}
             </span>
 
-            {% comment %} Кнопка виходу: перехід на logout {% endcomment %}
+            {% comment %} Logout button: goes to account_logout {% endcomment %}
             <a class="btn btn-sm btn-light" href="{% url 'account_logout' %}">Logout</a>
           {% else %}
-            {% comment %} Кнопка входу: перехід на login {% endcomment %}
+            {% comment %} Sign in button: goes to account_login {% endcomment %}
             <a class="btn btn-sm btn-outline-light" href="{% url 'account_login' %}">Sign in</a>
-            {% comment %} Кнопка реєстрації: перехід на signup {% endcomment %}
+            {% comment %} Sign up button: goes to account_signup {% endcomment %}
             <a class="btn btn-sm btn-light" href="{% url 'account_signup' %}">Sign up</a>
           {% endif %}
         </div>
@@ -80,9 +80,9 @@
         </div>
         <div class="app-modal-body" id="app-confirm-body"></div>
         <div class="app-modal-footer">
-          {% comment %} Кнопка OK: підтвердити дію {% endcomment %}
+          {% comment %} OK button: confirm the action {% endcomment %}
           <button class="btn btn-light app-modal-btn" type="button" data-confirm-ok>OK</button>
-          {% comment %} Кнопка Cancel: скасувати дію {% endcomment %}
+          {% comment %} Cancel button: abort the action {% endcomment %}
           <button class="btn btn-light app-modal-btn" type="button" data-confirm-cancel>Cancel</button>
         </div>
       </div>

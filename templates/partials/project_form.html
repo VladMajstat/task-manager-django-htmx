@@ -10,7 +10,7 @@
     </div>
 
     <div class="p-3 bg-white">
-      {% comment %} Форма створення/редагування проєкту: HTMX POST замінює картку {% endcomment %}
+      {% comment %} Create/edit project form: HTMX POST replaces the card {% endcomment %}
       <form
         hx-post="{% if project %}{% url 'service:project_update' project.id %}{% else %}{% url 'service:project_create' %}{% endif %}"
         hx-target="{% if project %}closest .app-card{% else %}closest .col-12{% endif %}"
@@ -26,7 +26,7 @@
             </div>
           {% endif %}
         </div>
-        {% comment %} Кнопка збереження проєкту {% endcomment %}
+        {% comment %} Save project button {% endcomment %}
         <button class="btn btn-success" type="submit">Save</button>
       </form>
     </div>
