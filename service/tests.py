@@ -19,20 +19,33 @@ class ProjectTaskFlowTests(TestCase):
             password="pass12345",
         )
         self.client.force_login(self.user)
+        self.htmx = {"HTTP_HX_REQUEST": "true"}
 
     def test_create_project(self):
-        response = self.client.post(reverse("service:project_create"), {"name": "Inbox"})
+        response = self.client.post(
+            reverse("service:project_create"),
+            {"name": "Inbox"},
+            **self.htmx,
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(Project.objects.filter(owner=self.user, name="Inbox").exists())
 
     def test_project_name_required(self):
-        response = self.client.post(reverse("service:project_create"), {"name": ""})
+        response = self.client.post(
+            reverse("service:project_create"),
+            {"name": ""},
+            **self.htmx,
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "This field is required.")
 
     def test_project_name_unique_per_owner(self):
         Project.objects.create(owner=self.user, name="Inbox")
-        response = self.client.post(reverse("service:project_create"), {"name": "Inbox"})
+        response = self.client.post(
+            reverse("service:project_create"),
+            {"name": "Inbox"},
+            **self.htmx,
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "You already have a project with this name.")
 
@@ -41,6 +54,7 @@ class ProjectTaskFlowTests(TestCase):
         response = self.client.post(
             reverse("service:project_update", args=[project.id]),
             {"name": "New"},
+            **self.htmx,
         )
         self.assertEqual(response.status_code, 200)
         project.refresh_from_db()
@@ -49,13 +63,19 @@ class ProjectTaskFlowTests(TestCase):
     def test_project_delete_only_owner(self):
         project = Project.objects.create(owner=self.user, name="Inbox")
         self.client.force_login(self.other)
-        response = self.client.post(reverse("service:project_delete", args=[project.id]))
+        response = self.client.post(
+            reverse("service:project_delete", args=[project.id]),
+            **self.htmx,
+        )
         self.assertEqual(response.status_code, 404)
         self.assertTrue(Project.objects.filter(id=project.id).exists())
 
     def test_project_delete_last_returns_empty_state(self):
         project = Project.objects.create(owner=self.user, name="Inbox")
-        response = self.client.post(reverse("service:project_delete", args=[project.id]))
+        response = self.client.post(
+            reverse("service:project_delete", args=[project.id]),
+            **self.htmx,
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No projects yet.")
 
@@ -64,6 +84,7 @@ class ProjectTaskFlowTests(TestCase):
         response = self.client.post(
             reverse("service:task_create", args=[project.id]),
             {"name": "First task"},
+            **self.htmx,
         )
         self.assertEqual(response.status_code, 200)
         task = Task.objects.get(project=project, name="First task")
@@ -74,6 +95,7 @@ class ProjectTaskFlowTests(TestCase):
         response = self.client.post(
             reverse("service:task_create", args=[project.id]),
             {"name": "Nope"},
+            **self.htmx,
         )
         self.assertEqual(response.status_code, 404)
 
@@ -84,6 +106,7 @@ class ProjectTaskFlowTests(TestCase):
         response = self.client.post(
             reverse("service:task_update", args=[task.id]),
             {"name": "Task", "deadline": past_date.isoformat()},
+            **self.htmx,
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Deadline cannot be in the past.")
@@ -95,13 +118,17 @@ class ProjectTaskFlowTests(TestCase):
         response = self.client.post(
             reverse("service:task_update", args=[task.id]),
             {"name": "Other"},
+            **self.htmx,
         )
         self.assertEqual(response.status_code, 404)
 
     def test_task_toggle_done(self):
         project = Project.objects.create(owner=self.user, name="Inbox")
         task = Task.objects.create(project=project, name="Task")
-        response = self.client.post(reverse("service:task_toggle_done", args=[task.id]))
+        response = self.client.post(
+            reverse("service:task_toggle_done", args=[task.id]),
+            **self.htmx,
+        )
         self.assertEqual(response.status_code, 200)
         task.refresh_from_db()
         self.assertTrue(task.is_done)
@@ -110,7 +137,10 @@ class ProjectTaskFlowTests(TestCase):
         project = Project.objects.create(owner=self.user, name="Inbox")
         first = Task.objects.create(project=project, name="First", priority=1)
         second = Task.objects.create(project=project, name="Second", priority=2)
-        response = self.client.post(reverse("service:task_move", args=[second.id, "up"]))
+        response = self.client.post(
+            reverse("service:task_move", args=[second.id, "up"]),
+            **self.htmx,
+        )
         self.assertEqual(response.status_code, 200)
         first.refresh_from_db()
         second.refresh_from_db()
@@ -120,6 +150,9 @@ class ProjectTaskFlowTests(TestCase):
     def test_task_delete_last_returns_empty_state(self):
         project = Project.objects.create(owner=self.user, name="Inbox")
         task = Task.objects.create(project=project, name="Task")
-        response = self.client.post(reverse("service:task_delete", args=[task.id]))
+        response = self.client.post(
+            reverse("service:task_delete", args=[task.id]),
+            **self.htmx,
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No tasks yet.")
